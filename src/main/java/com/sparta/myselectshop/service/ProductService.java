@@ -1,9 +1,6 @@
 package com.sparta.myselectshop.service;
 
-import com.sparta.myselectshop.entity.Product;
-import com.sparta.myselectshop.entity.ProductMypriceRequestDto;
-import com.sparta.myselectshop.entity.ProductRequestDto;
-import com.sparta.myselectshop.entity.ProductResponseDto;
+import com.sparta.myselectshop.entity.*;
 import com.sparta.myselectshop.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,5 +34,11 @@ public class ProductService {
 
     public List<ProductResponseDto> getProducts() {
         return productRepository.findAll().stream().map(ProductResponseDto::new).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void updateBySearch(Long id, ItemDto itemDto) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Product not found"));
+        product.updateByItemDto(itemDto);
     }
 }
