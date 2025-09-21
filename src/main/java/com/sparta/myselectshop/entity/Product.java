@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Table(name = "product")
@@ -31,6 +34,9 @@ public class Product extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY) // Many to One 일 때 eager로 불러와도 크게 이슈는 없음
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "product")
+    private List<ProductFolder> productFolderList = new ArrayList<>();
 
     public Product(ProductRequestDto productRequestDto, User user) {
         this.title = productRequestDto.getTitle();
