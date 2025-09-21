@@ -3,6 +3,10 @@ package com.sparta.myselectshop.service;
 import com.sparta.myselectshop.entity.*;
 import com.sparta.myselectshop.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,8 +36,18 @@ public class ProductService {
         return new ProductResponseDto(productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Product not found")));
     }
 
-    public List<ProductResponseDto> getProducts(User user) {
-        return productRepository.findAllByUser(user).stream().map(ProductResponseDto::new).collect(Collectors.toList());
+    public Page<ProductResponseDto> getProducts(User user, int page, int size, String sortBy, boolean isAsc) {
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        UserRoleEnum role = user.getRole();
+
+        if (role.equals(UserRoleEnum.ADMIN)) {
+            return productRepository.findAll(pageable).map(ProductResponseDto::new);
+        }
+        return productRepository.findAllByUser(user, pageable).map(ProductResponseDto::new);
     }
 
     public List<ProductResponseDto> getAllProducts() {
