@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 public class ProductService {
     private final ProductRepository productRepository;
 
-    public ProductResponseDto createProduct(ProductRequestDto productRequestDto) {
-        Product product = new Product(productRequestDto);
+    public ProductResponseDto createProduct(ProductRequestDto productRequestDto, User user) {
+        Product product = new Product(productRequestDto, user);
         productRepository.save(product);
         return new ProductResponseDto(product);
     }
@@ -32,8 +32,12 @@ public class ProductService {
         return new ProductResponseDto(productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Product not found")));
     }
 
-    public List<ProductResponseDto> getProducts() {
-        return productRepository.findAll().stream().map(ProductResponseDto::new).collect(Collectors.toList());
+    public List<ProductResponseDto> getProducts(User user) {
+        return productRepository.findAllByUser(user).stream().map(ProductResponseDto::new).collect(Collectors.toList());
+    }
+
+    public List<ProductResponseDto> getAllProducts() {
+        return productRepository.findAll().stream().map(ProductResponseDto::new).toList();
     }
 
     @Transactional
