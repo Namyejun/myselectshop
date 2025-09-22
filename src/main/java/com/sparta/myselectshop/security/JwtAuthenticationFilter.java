@@ -2,7 +2,6 @@ package com.sparta.myselectshop.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.myselectshop.entity.LoginRequestDto;
-import com.sparta.myselectshop.entity.User;
 import com.sparta.myselectshop.entity.UserRoleEnum;
 import com.sparta.myselectshop.jwt.JwtUtil;
 import jakarta.servlet.FilterChain;
