@@ -5,6 +5,7 @@ import com.sparta.myselectshop.security.JwtAuthenticationFilter;
 import com.sparta.myselectshop.security.JwtAuthorizationFilter;
 import com.sparta.myselectshop.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+@Slf4j(topic = "SecurityConfig")
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -32,16 +34,19 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+        log.info("passwordEncoder");
         return new BCryptPasswordEncoder();
     }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        log.info("authenticationManager");
         return configuration.getAuthenticationManager();
     }
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
+        log.info("jwtAuthenticationFilter");
         JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
         return filter;
@@ -49,11 +54,13 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() throws Exception {
+        log.info("jwtAuthorizationFilter");
         return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        log.info("securityFilterChain");
         http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"));
 
         // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
