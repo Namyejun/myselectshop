@@ -32,6 +32,8 @@ public class JwtUtil {
     public void init() {
         byte[] bytes = Base64.getDecoder().decode(jwtSecretKey);
         System.out.println("Before key");
+        System.out.println("jwtSecretKey raw: " + jwtSecretKey);
+        System.out.println("Decoded length: " + Base64.getDecoder().decode(jwtSecretKey).length);
         key = Keys.hmacShaKeyFor(bytes);
         System.out.println("After key");
     }
