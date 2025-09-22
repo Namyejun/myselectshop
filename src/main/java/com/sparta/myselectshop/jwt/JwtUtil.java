@@ -36,7 +36,6 @@ public class JwtUtil {
         } catch (Exception e) {
             log.error(e.getMessage());
         }
-
     }
 
     public String createToken(User user) {
