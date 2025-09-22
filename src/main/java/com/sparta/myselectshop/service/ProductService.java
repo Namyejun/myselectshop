@@ -1,6 +1,8 @@
 package com.sparta.myselectshop.service;
 
 import com.sparta.myselectshop.entity.*;
+import com.sparta.myselectshop.repository.FolderRepository;
+import com.sparta.myselectshop.repository.ProductFolderRepository;
 import com.sparta.myselectshop.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,12 +13,33 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
+    private final FolderRepository folderRepository;
+    private final ProductFolderRepository productFolderRepository;
+
+    public void addFolder(Long productId, Long folderId, User user) {
+        Product product = productRepository.findById(productId).orElseThrow(() -> new IllegalArgumentException("Product not found"));
+
+        Folder folder = folderRepository.findById(folderId).orElseThrow(() -> new IllegalArgumentException("Folder not found"));
+
+        if (product.getUser().getId() != user.getId() || folder.getUser().getId() != user.getId()) {
+            throw new IllegalArgumentException("Folder and Product don't have the same user");
+        }
+
+        Optional<ProductFolder> duplicateCheck = productFolderRepository.findByProductAndFolder(product, folder);
+        if (duplicateCheck.isPresent()) {
+            throw new IllegalArgumentException("product already has a duplicate folder");
+        }
+
+        ProductFolder productFolder = new ProductFolder(product, folder);
+        productFolderRepository.save(productFolder);
+    }
 
     public ProductResponseDto createProduct(ProductRequestDto productRequestDto, User user) {
         Product product = new Product(productRequestDto, user);

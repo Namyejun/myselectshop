@@ -26,6 +26,11 @@ public class ProductController {
 
     private final ProductService productService;
 
+    @PostMapping("/products/{productId}/folder")
+    public void addFolder(@PathVariable Long productId, @RequestParam Long folderId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        productService.addFolder(productId, folderId, userDetails.getUser());
+    }
+
     @PostMapping("/products")
     public ProductResponseDto createProduct(@RequestBody ProductRequestDto productRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return productService.createProduct(productRequestDto, userDetails.getUser());
