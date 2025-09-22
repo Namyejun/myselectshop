@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 
@@ -31,7 +32,9 @@ public class JwtUtil {
     public void init() {
         System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + jwtSecretKey);
         byte[] bytes = Base64.getDecoder().decode(jwtSecretKey);
+        System.out.println("??????????????????????????????" + Arrays.toString(bytes));
         key = Keys.hmacShaKeyFor(bytes);
+        System.out.println("key: " + key);
     }
 
     public String createToken(User user) {
