@@ -31,8 +31,9 @@ public class JwtUtil {
     @PostConstruct
     public void init() {
         byte[] bytes = Base64.getDecoder().decode(jwtSecretKey);
+        System.out.println("Before key");
         key = Keys.hmacShaKeyFor(bytes);
-        System.out.println("key" + key + ", " + Arrays.toString(key.getEncoded()));
+        System.out.println("After key");
     }
 
     public String createToken(User user) {
