@@ -30,12 +30,9 @@ public class JwtUtil {
 
     @PostConstruct
     public void init() {
-        try {
-            byte[] bytes = Base64.getDecoder().decode(jwtSecretKey);
-            key = Keys.hmacShaKeyFor(bytes);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
+        byte[] bytes = Base64.getDecoder().decode(jwtSecretKey);
+        key = Keys.hmacShaKeyFor(bytes);
+        System.out.println("key" + key + ", " + Arrays.toString(key.getEncoded()));
     }
 
     public String createToken(User user) {
