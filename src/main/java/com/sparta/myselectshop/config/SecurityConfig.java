@@ -14,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -73,7 +74,7 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
         );
 
-        http.formLogin(formLogin -> formLogin.loginProcessingUrl("/api/user/login").permitAll());
+        http.formLogin(AbstractHttpConfigurer::disable);
 
         // 인가는 한 번만 동작해야 함. 인증 이전에 인가를 먼저 동작하게 해야 함. 그 다음에 인증이 완료되면 redirect로 동작하도록
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
